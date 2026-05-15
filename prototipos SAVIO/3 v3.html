@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAVIO UTB · Inicio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --white: #ffffff;
+            --bg: #f6f7fb;
+            --primary: #0007d6;
+            --primary-light: #eaeaFF;
+            --primary-glow: rgba(0, 7, 214, 0.15);
+            --black: #0a0a0a;
+            --text: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --danger: #dc2626;
+            --danger-light: #fef2f2;
+            --danger-glow: rgba(220, 38, 38, 0.2);
+            --warning: #ea580c;
+            --warning-light: #fff7ed;
+            --warning-glow: rgba(234, 88, 12, 0.2);
+            --success: #16a34a;
+            --border: #e5e7eb;
+            --border-light: #f0f0f0;
+            --shadow-xs: 0 1px 2px rgba(0,0,0,0.03);
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+            --shadow: 0 6px 24px rgba(0,0,0,0.06);
+            --radius-xl: 22px;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --navbar-height: 52px;
+            --content-gap: 0.85rem;
+            --page-padding: 1rem;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+            padding: var(--page-padding);
+        }
+        .app-container {
+            width: 100%;
+            max-width: 1400px;
+            height: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: var(--content-gap);
+        }
+
+        /* NAVBAR UNIFICADA */
+        .navbar {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 0 1.25rem;
+            height: var(--navbar-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-shrink: 0;
+            box-shadow: var(--shadow-xs);
+        }
+        .nav-brand {
+            display: flex; align-items: center; gap: 0.5rem;
+            text-decoration: none; color: var(--black);
+            font-weight: 700; font-size: 1.05rem; letter-spacing: -0.02em; flex-shrink: 0;
+        }
+        .nav-brand-icon {
+            width: 32px; height: 32px; background: var(--primary);
+            border-radius: var(--radius-sm); display: flex;
+            align-items: center; justify-content: center;
+            color: white; font-weight: 800; font-size: 0.75rem;
+            box-shadow: 0 0 12px var(--primary-glow);
+        }
+        .nav-links { display: flex; gap: 0.1rem; list-style: none; }
+        .nav-links a {
+            text-decoration: none; color: var(--text-secondary);
+            font-weight: 500; font-size: 0.78rem;
+            padding: 0.35rem 0.7rem; border-radius: 2rem;
+            transition: var(--transition); white-space: nowrap;
+        }
+        .nav-links a:hover, .nav-links a.active { background: var(--primary-light); color: var(--primary); }
+        .nav-actions { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
+        .btn-icon {
+            width: 34px; height: 34px; border-radius: 50%;
+            border: 1.5px solid var(--border); background: var(--white);
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: var(--transition); color: var(--text-secondary); position: relative;
+        }
+        .btn-icon:hover { border-color: var(--primary); box-shadow: 0 0 0 5px rgba(0,7,214,0.04); }
+        .icon-badge {
+            position: absolute; top: -5px; right: -5px;
+            background: var(--danger); color: white;
+            font-size: 0.55rem; font-weight: 700;
+            min-width: 17px; height: 17px; border-radius: 9px;
+            display: flex; align-items: center; justify-content: center;
+            border: 2px solid white; box-shadow: 0 0 8px var(--danger-glow);
+        }
+        .icon-badge.warn { background: var(--warning); box-shadow: 0 0 8px rgba(234,88,12,0.2); }
+        .user-chip {
+            display: flex; align-items: center; gap: 0.35rem;
+            background: var(--bg); border-radius: 2rem;
+            padding: 0.22rem 0.65rem 0.22rem 0.22rem;
+            border: 1px solid var(--border); cursor: pointer;
+            transition: var(--transition); font-size: 0.78rem;
+            font-weight: 500; color: var(--text-secondary);
+        }
+        .user-chip:hover { border-color: var(--primary); }
+        .avatar {
+            width: 26px; height: 26px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), #1e3a8a);
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: 700; font-size: 0.6rem;
+        }
+
+        /* MAIN LAYOUT: 2 columnas */
+        .main-layout {
+            flex: 1;
+            display: flex;
+            gap: var(--content-gap);
+            min-height: 0;
+        }
+        .col-left { flex: 0 0 58%; display: flex; flex-direction: column; gap: var(--content-gap); min-height: 0; }
+        .col-right { flex: 0 0 42%; display: flex; flex-direction: column; gap: var(--content-gap); min-height: 0; }
+
+        .block {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: var(--shadow-xs);
+        }
+        .block:hover { border-color: var(--primary); box-shadow: var(--shadow); }
+        .block-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 0.5rem; flex-shrink: 0; gap: 0.4rem;
+        }
+        .block-title {
+            font-size: 0.88rem; font-weight: 700; letter-spacing: -0.01em;
+            display: flex; align-items: center; gap: 0.45rem; color: var(--black);
+        }
+        .block-badge {
+            font-size: 0.6rem; font-weight: 600; padding: 0.18rem 0.5rem;
+            border-radius: 2rem; background: var(--bg); color: var(--text-muted); white-space: nowrap;
+        }
+        .block-badge.urgent { background: var(--danger-light); color: var(--danger); }
+
+        /* NOTIFICACIONES */
+        .block-notifs { flex: 0 0 auto; max-height: 42%; }
+        .notifs-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem;
+            overflow-y: auto; padding-right: 0.15rem; flex: 1;
+        }
+        .notifs-grid::-webkit-scrollbar { width: 3px; }
+        .notifs-grid::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 2px; }
+        .notifs-grid::-webkit-scrollbar-track { background: transparent; }
+        .notif-mini {
+            background: var(--bg); border-radius: var(--radius-md);
+            padding: 0.55rem 0.7rem; border: 1px solid var(--border-light);
+            cursor: pointer; transition: var(--transition);
+            font-size: 0.7rem; display: flex; gap: 0.4rem; align-items: flex-start;
+        }
+        .notif-mini:hover { border-color: var(--primary); background: var(--white); }
+        .notif-mini.urgent { border-left: 3px solid var(--danger); background: var(--danger-light); }
+        .notif-mini-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 0.2rem; }
+        .notif-mini-dot.red { background: var(--danger); }
+        .notif-mini-dot.orange { background: var(--warning); }
+        .notif-mini-dot.blue { background: var(--primary); }
+        .notif-mini-body { flex: 1; min-width: 0; }
+        .notif-mini-title { font-weight: 600; font-size: 0.7rem; color: var(--black); margin-bottom: 0.05rem; }
+        .notif-mini-course { font-size: 0.58rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.03em; font-weight: 600; }
+
+        /* CURSOS */
+        .block-courses { flex: 1; min-height: 0; }
+        .courses-list {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 0.45rem;
+            overflow-y: auto; padding-right: 0.15rem; flex: 1;
+        }
+        .courses-list::-webkit-scrollbar { width: 3px; }
+        .courses-list::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 2px; }
+        .courses-list::-webkit-scrollbar-track { background: transparent; }
+        .course-card {
+            background: var(--bg); border-radius: var(--radius-md);
+            padding: 0.7rem 0.8rem; border: 1px solid var(--border-light);
+            cursor: pointer; transition: var(--transition);
+            display: flex; flex-direction: column; gap: 0.45rem;
+        }
+        .course-card:hover {
+            border-color: var(--primary); background: var(--white);
+            transform: translateY(-2px); box-shadow: var(--shadow-sm);
+        }
+        .course-card-top { display: flex; align-items: center; gap: 0.5rem; }
+        .course-icon-sq {
+            width: 36px; height: 36px; border-radius: var(--radius-sm);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.85rem; flex-shrink: 0; color: white;
+        }
+        .ci-blue { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+        .ci-purple { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+        .ci-emerald { background: linear-gradient(135deg, #10b981, #059669); }
+        .ci-rose { background: linear-gradient(135deg, #f43f5e, #e11d48); }
+        .course-name { font-weight: 600; font-size: 0.78rem; color: var(--black); line-height: 1.2; }
+        .course-code { font-size: 0.6rem; color: var(--text-muted); }
+        .course-stats { display: flex; gap: 0.3rem; flex-wrap: wrap; }
+        .stat-tag {
+            font-size: 0.58rem; font-weight: 700; padding: 0.18rem 0.45rem;
+            border-radius: 2rem; display: flex; align-items: center; gap: 0.18rem; white-space: nowrap;
+        }
+        .stat-red { background: var(--danger-light); color: var(--danger); }
+        .stat-orange { background: var(--warning-light); color: var(--warning); }
+
+        /* PRÓXIMAS ENTREGAS */
+        .block-deliveries { flex: 0 0 auto; max-height: 48%; }
+        .delivery-list {
+            display: flex; flex-direction: column; gap: 0.35rem;
+            overflow-y: auto; padding-right: 0.15rem; flex: 1;
+        }
+        .delivery-list::-webkit-scrollbar { width: 3px; }
+        .delivery-list::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 2px; }
+        .delivery-list::-webkit-scrollbar-track { background: transparent; }
+        .delivery-item {
+            background: var(--bg); border-radius: var(--radius-sm);
+            padding: 0.48rem 0.7rem; border: 1px solid var(--border-light);
+            font-size: 0.7rem; display: flex; align-items: center; gap: 0.45rem;
+            flex-shrink: 0; cursor: pointer; transition: var(--transition);
+        }
+        .delivery-item:hover { border-color: var(--primary); background: var(--white); }
+        .delivery-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+        .delivery-dot.red { background: var(--danger); box-shadow: 0 0 4px var(--danger-glow); }
+        .delivery-dot.orange { background: var(--warning); box-shadow: 0 0 4px var(--warning-glow); }
+        .delivery-info { flex: 1; min-width: 0; }
+        .delivery-course { font-size: 0.58rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; }
+        .delivery-name { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--black); }
+
+        /* ACCIONES RÁPIDAS */
+        .block-actions { flex: 1; min-height: 0; }
+        .actions-grid {
+            display: grid; grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr; gap: 0.45rem; flex: 1; align-content: stretch;
+        }
+        .action-item {
+            background: var(--bg); border-radius: var(--radius-md);
+            padding: 0.7rem; border: 1px solid var(--border-light);
+            transition: var(--transition); cursor: pointer;
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; gap: 0.45rem;
+            font-size: 0.72rem; font-weight: 600; color: var(--text-secondary);
+        }
+        .action-item:hover {
+            border-color: var(--primary); background: var(--primary-light);
+            color: var(--primary); transform: translateY(-2px);
+        }
+        .action-icon-circle {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: var(--white); display: flex; align-items: center;
+            justify-content: center; border: 1.5px solid var(--border);
+            transition: var(--transition);
+        }
+        .action-item:hover .action-icon-circle { border-color: var(--primary); box-shadow: 0 0 0 6px rgba(0,7,214,0.04); }
+
+        @media (max-width: 1000px) {
+            .main-layout { flex-direction: column; }
+            .col-left, .col-right { flex: 1 1 auto; }
+            .block-notifs, .block-deliveries { max-height: none; }
+            body { overflow-y: auto; }
+        }
+        @media (max-width: 600px) {
+            .notifs-grid, .courses-list { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- NAVBAR UNIFICADA -->
+        <nav class="navbar">
+            <a href="#" class="nav-brand">
+                <div class="nav-brand-icon">S</div>
+                SAVIO UTB
+            </a>
+            <ul class="nav-links">
+                <li><a href="#" class="active">Inicio</a></li>
+                <li><a href="#">Biblioteca</a></li>
+                <li><a href="#">Banner</a></li>
+                <li><a href="#">Reglamento</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="btn-icon" title="Notificaciones" onclick="alert('Centro de notificaciones: 4 sin leer.')">
+                    <i data-lucide="bell" style="width:16px;height:16px;"></i>
+                    <span class="icon-badge">4</span>
+                </button>
+                <button class="btn-icon" title="Mensajes" onclick="alert('Bandeja de mensajes: 2 nuevos.')">
+                    <i data-lucide="message-circle" style="width:16px;height:16px;"></i>
+                    <span class="icon-badge warn">2</span>
+                </button>
+                <div class="user-chip" onclick="alert('Menu de usuario: Perfil | Calificaciones | Insignias | Cerrar sesion')">
+                    <div class="avatar">PL</div>
+                    Pablo Leal
+                </div>
+            </div>
+        </nav>
+
+        <!-- MAIN LAYOUT -->
+        <div class="main-layout">
+            <!-- COLUMNA IZQUIERDA -->
+            <div class="col-left">
+                <!-- Notificaciones -->
+                <div class="block block-notifs" onclick="alert('Abriendo centro de notificaciones completo.')">
+                    <div class="block-header">
+                        <span class="block-title">
+                            <i data-lucide="bell" style="width:15px;height:15px;color:var(--danger);"></i>
+                            Ultimas notificaciones
+                        </span>
+                        <span class="block-badge urgent">3 urgentes</span>
+                    </div>
+                    <div class="notifs-grid">
+                        <div class="notif-mini urgent" onclick="event.stopPropagation(); alert('DESARROLLO FRONTEND: Clase del jueves 15 cancelada. Reprogramada lunes 19.')">
+                            <div class="notif-mini-dot red"></div>
+                            <div class="notif-mini-body">
+                                <div class="notif-mini-title">Clase cancelada</div>
+                                <div class="notif-mini-course">Desarrollo Frontend</div>
+                            </div>
+                        </div>
+                        <div class="notif-mini urgent" onclick="event.stopPropagation(); alert('SABER PRO INGLES: Simulacro Speaking obligatorio. Antes del 20 mayo.')">
+                            <div class="notif-mini-dot orange"></div>
+                            <div class="notif-mini-body">
+                                <div class="notif-mini-title">Simulacro obligatorio</div>
+                                <div class="notif-mini-course">Saber Pro Ingles</div>
+                            </div>
+                        </div>
+                        <div class="notif-mini" onclick="event.stopPropagation(); alert('SISTEMAS Y MODELOS: Notas del parcial 2 publicadas. Promedio: 4.1')">
+                            <div class="notif-mini-dot blue"></div>
+                            <div class="notif-mini-body">
+                                <div class="notif-mini-title">Notas publicadas</div>
+                                <div class="notif-mini-course">Sistemas y Modelos</div>
+                            </div>
+                        </div>
+                        <div class="notif-mini" onclick="event.stopPropagation(); alert('DESARROLLO FRONTEND: Tarea 3 publicada. Entrega: 25 mayo.')">
+                            <div class="notif-mini-dot blue"></div>
+                            <div class="notif-mini-body">
+                                <div class="notif-mini-title">Nueva tarea</div>
+                                <div class="notif-mini-course">Desarrollo Frontend</div>
+                            </div>
+                        </div>
+                        <div class="notif-mini" onclick="event.stopPropagation(); alert('Taller Saber-Pro: Monitoria grupal manana 3:00 pm.')">
+                            <div class="notif-mini-dot blue"></div>
+                            <div class="notif-mini-body">
+                                <div class="notif-mini-title">Recordatorio de monitoria</div>
+                                <div class="notif-mini-course">Saber-Pro Comunicativas</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cursos -->
+                <div class="block block-courses" onclick="alert('Seccion de cursos completa.')">
+                    <div class="block-header">
+                        <span class="block-title">
+                            <i data-lucide="book-open" style="width:15px;height:15px;color:var(--primary);"></i>
+                            Mis Cursos
+                        </span>
+                        <span class="block-badge">Mas reciente</span>
+                    </div>
+                    <div class="courses-list">
+                        <div class="course-card" onclick="event.stopPropagation(); alert('Ingresando a DESARROLLO FRONTEND-2622...')">
+                            <div class="course-card-top">
+                                <div class="course-icon-sq ci-blue">DF</div>
+                                <div>
+                                    <div class="course-name">Desarrollo Frontend</div>
+                                    <div class="course-code">2622-202610</div>
+                                </div>
+                            </div>
+                            <div class="course-stats">
+                                <span class="stat-tag stat-red">2 reportadas</span>
+                                <span class="stat-tag stat-orange">1 sin reportar</span>
+                            </div>
+                        </div>
+                        <div class="course-card" onclick="event.stopPropagation(); alert('Ingresando a SISTEMAS Y MODELOS-1780...')">
+                            <div class="course-card-top">
+                                <div class="course-icon-sq ci-purple">SM</div>
+                                <div>
+                                    <div class="course-name">Sistemas y Modelos</div>
+                                    <div class="course-code">1780-202610</div>
+                                </div>
+                            </div>
+                            <div class="course-stats">
+                                <span class="stat-tag stat-red">1 reportada</span>
+                                <span class="stat-tag stat-orange">1 sin reportar</span>
+                            </div>
+                        </div>
+                        <div class="course-card" onclick="event.stopPropagation(); alert('Ingresando a SABER PRO INGLES...')">
+                            <div class="course-card-top">
+                                <div class="course-icon-sq ci-emerald">SI</div>
+                                <div>
+                                    <div class="course-name">Saber Pro Ingles</div>
+                                    <div class="course-code">202610</div>
+                                </div>
+                            </div>
+                            <div class="course-stats">
+                                <span class="stat-tag stat-red">1 reportada</span>
+                                <span class="stat-tag stat-orange">1 sin reportar</span>
+                            </div>
+                        </div>
+                        <div class="course-card" onclick="event.stopPropagation(); alert('Ingresando a Taller Saber-Pro Comunicativas...')">
+                            <div class="course-card-top">
+                                <div class="course-icon-sq ci-rose">TC</div>
+                                <div>
+                                    <div class="course-name">Taller Saber-Pro Comunicativas</div>
+                                    <div class="course-code">202610</div>
+                                </div>
+                            </div>
+                            <div class="course-stats">
+                                <span class="stat-tag stat-red">1 reportada</span>
+                                <span class="stat-tag stat-orange">1 sin reportar</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COLUMNA DERECHA -->
+            <div class="col-right">
+                <!-- Proximas entregas -->
+                <div class="block block-deliveries" onclick="alert('Abriendo calendario de entregas.')">
+                    <div class="block-header">
+                        <span class="block-title">
+                            <i data-lucide="clock" style="width:15px;height:15px;color:var(--danger);"></i>
+                            Proximas entregas
+                        </span>
+                        <span class="block-badge">Mayo 2026</span>
+                    </div>
+                    <div class="delivery-list">
+                        <div class="delivery-item" onclick="event.stopPropagation(); alert('Proyecto HTML/CSS\nDesarrollo Frontend &middot; 14 mayo &middot; 23:59\nReportada en calendario')">
+                            <div class="delivery-dot red"></div>
+                            <div class="delivery-info">
+                                <div class="delivery-course">Desarrollo Frontend</div>
+                                <div class="delivery-name">Proyecto HTML/CSS &middot; 14 may</div>
+                            </div>
+                        </div>
+                        <div class="delivery-item" onclick="event.stopPropagation(); alert('Diagrama de Casos de Uso\nSistemas y Modelos &middot; 14 mayo &middot; 18:00\nNo reportada en calendario')">
+                            <div class="delivery-dot orange"></div>
+                            <div class="delivery-info">
+                                <div class="delivery-course">Sistemas y Modelos</div>
+                                <div class="delivery-name">Diagrama de Casos de Uso &middot; 14 may</div>
+                            </div>
+                        </div>
+                        <div class="delivery-item" onclick="event.stopPropagation(); alert('Mock Test Reading\nSaber Pro Ingles &middot; 18 mayo &middot; 23:55\nReportada en calendario')">
+                            <div class="delivery-dot red"></div>
+                            <div class="delivery-info">
+                                <div class="delivery-course">Saber Pro Ingles</div>
+                                <div class="delivery-name">Mock Test Reading &middot; 18 may</div>
+                            </div>
+                        </div>
+                        <div class="delivery-item" onclick="event.stopPropagation(); alert('Avance Proyecto Final\nDesarrollo Frontend &middot; 20 mayo &middot; 23:59\nNo reportada en calendario')">
+                            <div class="delivery-dot orange"></div>
+                            <div class="delivery-info">
+                                <div class="delivery-course">Desarrollo Frontend</div>
+                                <div class="delivery-name">Avance Proyecto Final &middot; 20 may</div>
+                            </div>
+                        </div>
+                        <div class="delivery-item" onclick="event.stopPropagation(); alert('Sustentacion Parcial\nSistemas y Modelos &middot; 25 mayo &middot; 14:00\nReportada en calendario')">
+                            <div class="delivery-dot red"></div>
+                            <div class="delivery-info">
+                                <div class="delivery-course">Sistemas y Modelos</div>
+                                <div class="delivery-name">Sustentacion Parcial &middot; 25 may</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Acciones rapidas -->
+                <div class="block block-actions" onclick="alert('Panel de acciones rapidas.')">
+                    <div class="block-header">
+                        <span class="block-title">
+                            <i data-lucide="zap" style="width:15px;height:15px;color:var(--warning);"></i>
+                            Acciones rapidas
+                        </span>
+                    </div>
+                    <div class="actions-grid">
+                        <div class="action-item" onclick="event.stopPropagation(); alert('Abriendo calendario completo...')">
+                            <div class="action-icon-circle">
+                                <i data-lucide="calendar" style="width:17px;height:17px;color:var(--primary);"></i>
+                            </div>
+                            Calendario
+                        </div>
+                        <div class="action-item" onclick="event.stopPropagation(); alert('Abriendo calificaciones en Banner...')">
+                            <div class="action-icon-circle">
+                                <i data-lucide="award" style="width:17px;height:17px;color:#f59e0b;"></i>
+                            </div>
+                            Notas
+                        </div>
+                        <div class="action-item" onclick="event.stopPropagation(); alert('Abriendo panel de insignias...')">
+                            <div class="action-icon-circle">
+                                <i data-lucide="shield" style="width:17px;height:17px;color:#22c55e;"></i>
+                            </div>
+                            Insignias
+                        </div>
+                        <div class="action-item" onclick="event.stopPropagation(); alert('Abriendo perfil de Pablo Leal...')">
+                            <div class="action-icon-circle">
+                                <i data-lucide="user" style="width:17px;height:17px;color:#8b5cf6;"></i>
+                            </div>
+                            Perfil
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>lucide.createIcons();</script>
+</body>
+</html>

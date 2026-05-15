@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAVIO UTB · Notificaciones</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --white: #ffffff;
+            --bg: #f6f7fb;
+            --primary: #0007d6;
+            --primary-light: #eaeaFF;
+            --primary-glow: rgba(0, 7, 214, 0.15);
+            --black: #0a0a0a;
+            --text: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --danger: #dc2626;
+            --danger-light: #fef2f2;
+            --danger-glow: rgba(220, 38, 38, 0.2);
+            --warning: #ea580c;
+            --warning-light: #fff7ed;
+            --success: #16a34a;
+            --border: #e5e7eb;
+            --border-light: #f0f0f0;
+            --shadow-xs: 0 1px 2px rgba(0,0,0,0.03);
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+            --shadow: 0 6px 24px rgba(0,0,0,0.06);
+            --radius-xl: 22px;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --navbar-height: 52px;
+            --content-gap: 0.85rem;
+            --page-padding: 1rem;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+            padding: var(--page-padding);
+        }
+        .app-container {
+            width: 100%;
+            max-width: 1150px;
+            height: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: var(--content-gap);
+        }
+
+        /* NAVBAR UNIFICADA (identica a los otros HTMLs) */
+        .navbar {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 0 1.25rem;
+            height: var(--navbar-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-shrink: 0;
+            box-shadow: var(--shadow-xs);
+        }
+        .nav-brand {
+            display: flex; align-items: center; gap: 0.5rem;
+            text-decoration: none; color: var(--black);
+            font-weight: 700; font-size: 1.05rem; letter-spacing: -0.02em; flex-shrink: 0;
+        }
+        .nav-brand-icon {
+            width: 32px; height: 32px; background: var(--primary);
+            border-radius: var(--radius-sm); display: flex;
+            align-items: center; justify-content: center;
+            color: white; font-weight: 800; font-size: 0.75rem;
+            box-shadow: 0 0 12px var(--primary-glow);
+        }
+        .nav-links { display: flex; gap: 0.1rem; list-style: none; }
+        .nav-links a {
+            text-decoration: none; color: var(--text-secondary);
+            font-weight: 500; font-size: 0.78rem;
+            padding: 0.35rem 0.7rem; border-radius: 2rem;
+            transition: var(--transition); white-space: nowrap;
+        }
+        .nav-links a:hover, .nav-links a.active { background: var(--primary-light); color: var(--primary); }
+        .nav-actions { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
+        .btn-icon {
+            width: 34px; height: 34px; border-radius: 50%;
+            border: 1.5px solid var(--border); background: var(--white);
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: var(--transition); color: var(--text-secondary); position: relative;
+        }
+        .btn-icon:hover { border-color: var(--primary); box-shadow: 0 0 0 5px rgba(0,7,214,0.04); }
+        .icon-badge {
+            position: absolute; top: -5px; right: -5px;
+            background: var(--danger); color: white;
+            font-size: 0.55rem; font-weight: 700;
+            min-width: 17px; height: 17px; border-radius: 9px;
+            display: flex; align-items: center; justify-content: center;
+            border: 2px solid white; box-shadow: 0 0 8px var(--danger-glow);
+        }
+        .icon-badge.warn { background: var(--warning); box-shadow: 0 0 8px rgba(234,88,12,0.2); }
+        .user-chip {
+            display: flex; align-items: center; gap: 0.35rem;
+            background: var(--bg); border-radius: 2rem;
+            padding: 0.22rem 0.65rem 0.22rem 0.22rem;
+            border: 1px solid var(--border); cursor: pointer;
+            transition: var(--transition); font-size: 0.78rem;
+            font-weight: 500; color: var(--text-secondary);
+        }
+        .user-chip:hover { border-color: var(--primary); }
+        .avatar {
+            width: 26px; height: 26px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), #1e3a8a);
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: 700; font-size: 0.6rem;
+        }
+
+        /* MAIN GRID */
+        .main-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--content-gap);
+            min-height: 0;
+        }
+        .panel {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 1.1rem;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: var(--shadow-xs);
+        }
+        .panel-header {
+            display: flex; align-items: center; justify-content: space-between;
+            flex-shrink: 0; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.4rem;
+        }
+        .panel-title {
+            font-size: 0.88rem; font-weight: 700;
+            letter-spacing: -0.01em; color: var(--black);
+            display: flex; align-items: center; gap: 0.4rem;
+        }
+        .filter-pills { display: flex; gap: 0.25rem; flex-wrap: wrap; }
+        .pill {
+            font-size: 0.62rem; font-weight: 600;
+            padding: 0.22rem 0.55rem; border-radius: 2rem;
+            cursor: pointer; transition: var(--transition);
+            background: transparent; color: var(--text-muted);
+            border: 1.5px solid var(--border); font-family: var(--font);
+        }
+        .pill:hover, .pill.active { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
+
+        .notif-list {
+            flex: 1; display: flex; flex-direction: column; gap: 0.4rem;
+            overflow-y: auto; padding-right: 0.15rem;
+        }
+        .notif-list::-webkit-scrollbar { width: 3px; }
+        .notif-list::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 2px; }
+        .notif-list::-webkit-scrollbar-track { background: transparent; }
+
+        .notif-item {
+            background: var(--bg); border-radius: var(--radius-md);
+            padding: 0.6rem 0.75rem; border: 1px solid var(--border-light);
+            cursor: pointer; transition: var(--transition);
+            display: flex; gap: 0.55rem; align-items: flex-start; flex-shrink: 0;
+        }
+        .notif-item:hover { border-color: var(--primary); background: var(--white); }
+        .notif-item.unread { border-left: 3px solid var(--primary); background: var(--primary-light); }
+        .notif-item.urgent { border-left: 3px solid var(--danger); background: var(--danger-light); }
+        .notif-icon-sq {
+            width: 30px; height: 30px; border-radius: var(--radius-sm);
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; font-size: 0.75rem; font-weight: 700;
+        }
+        .icon-danger { background: rgba(220,38,38,0.08); color: var(--danger); }
+        .icon-warning { background: rgba(234,88,12,0.08); color: var(--warning); }
+        .icon-info { background: rgba(0,7,214,0.06); color: var(--primary); }
+        .icon-success { background: rgba(22,163,74,0.08); color: var(--success); }
+        .notif-body { flex: 1; min-width: 0; }
+        .notif-course {
+            font-size: 0.58rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.03em; color: var(--text-muted); margin-bottom: 0.06rem;
+        }
+        .notif-title { font-weight: 600; font-size: 0.76rem; margin-bottom: 0.06rem; color: var(--black); }
+        .notif-desc { font-size: 0.68rem; color: var(--text-muted); margin-bottom: 0.15rem; }
+        .notif-time {
+            font-size: 0.58rem; color: var(--text-muted);
+            display: flex; align-items: center; gap: 0.18rem;
+        }
+        .notif-dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: var(--primary); flex-shrink: 0; margin-top: 0.25rem;
+        }
+
+        .preview-panel { display: flex; flex-direction: column; overflow: hidden; }
+        .preview-content {
+            flex: 1; display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            color: var(--text-muted); text-align: center; gap: 0.4rem;
+        }
+        .preview-detail { flex: 1; display: flex; flex-direction: column; gap: 0.7rem; }
+        .preview-message-box {
+            background: var(--bg); border-radius: var(--radius-md);
+            padding: 0.75rem; border: 1px solid var(--border-light);
+            font-size: 0.78rem; line-height: 1.5; color: var(--text-secondary);
+        }
+        .btn {
+            padding: 0.32rem 0.65rem; border-radius: 2rem; font-weight: 600;
+            font-size: 0.65rem; cursor: pointer; border: none;
+            transition: var(--transition); display: inline-flex;
+            align-items: center; gap: 0.22rem; font-family: var(--font);
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: #0005b0; box-shadow: 0 0 10px var(--primary-glow); }
+        .btn-outline { background: transparent; color: var(--primary); border: 1.5px solid var(--primary); }
+        .btn-outline:hover { background: var(--primary-light); }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-danger:hover { background: #b91c1c; box-shadow: 0 0 10px var(--danger-glow); }
+
+        @media (max-width: 750px) {
+            .main-grid { grid-template-columns: 1fr; }
+            body { overflow-y: auto; }
+            .app-container { height: auto; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- NAVBAR UNIFICADA -->
+        <nav class="navbar">
+            <a href="#" class="nav-brand">
+                <div class="nav-brand-icon">S</div>
+                SAVIO UTB
+            </a>
+            <ul class="nav-links">
+                <li><a href="#">Biblioteca</a></li>
+                <li><a href="#">Banner</a></li>
+                <li><a href="#">Reglamento</a></li>
+                <li><a href="#" class="active">Notificaciones</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="btn-icon" title="Notificaciones" onclick="alert('Centro de notificaciones: 4 sin leer.')">
+                    <i data-lucide="bell" style="width:16px;height:16px;"></i>
+                    <span class="icon-badge">4</span>
+                </button>
+                <button class="btn-icon" title="Mensajes" onclick="alert('Bandeja de mensajes: 2 nuevos.')">
+                    <i data-lucide="message-circle" style="width:16px;height:16px;"></i>
+                    <span class="icon-badge warn">2</span>
+                </button>
+                <div class="user-chip" onclick="alert('Menu de usuario: Perfil | Calificaciones | Insignias | Cerrar sesion')">
+                    <div class="avatar">PL</div>
+                    Pablo Leal
+                </div>
+            </div>
+        </nav>
+
+        <!-- CONTENIDO -->
+        <div class="main-grid">
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="panel-title">
+                        <i data-lucide="bell" style="width:15px;height:15px;color:var(--danger);"></i>
+                        Centro de Notificaciones
+                    </span>
+                    <div class="filter-pills">
+                        <button class="pill active" onclick="filterNotifs('all',this)">Todas</button>
+                        <button class="pill" onclick="filterNotifs('unread',this)">No leidas</button>
+                        <button class="pill" onclick="filterNotifs('urgent',this)">Urgentes</button>
+                    </div>
+                </div>
+                <div class="notif-list" id="notifList"></div>
+            </div>
+
+            <div class="panel preview-panel">
+                <div class="panel-header">
+                    <span class="panel-title">Vista previa</span>
+                </div>
+                <div class="preview-content" id="previewContent">
+                    <i data-lucide="inbox" style="width:32px;height:32px;opacity:0.2;"></i>
+                    <p style="font-size:0.75rem;">Selecciona una notificacion</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* Datos de notificaciones */
+        const notifications = [
+            { id:1, course:'DESARROLLO FRONTEND-2622', title:'Clase cancelada', desc:'El profesor cancelo la clase del jueves 15 de mayo. Se reprograma para el lunes 19 a las 8:00 am.', time:'Hace 2 horas', type:'danger', unread:true, urgent:true },
+            { id:2, course:'SISTEMAS Y MODELOS-1780', title:'Notas publicadas', desc:'Las calificaciones del parcial 2 ya estan disponibles. Promedio del curso: 4.1', time:'Hace 5 horas', type:'success', unread:true, urgent:false },
+            { id:3, course:'SABER PRO INGLES', title:'Simulacro obligatorio', desc:'Debes presentar el simulacro de Speaking antes del 20 de mayo. Es requisito para el examen final.', time:'Ayer', type:'warning', unread:true, urgent:true },
+            { id:4, course:'DESARROLLO FRONTEND-2622', title:'Nueva tarea publicada', desc:'Tarea 3: Diseno Responsivo con Flexbox. Fecha de entrega: 25 de mayo.', time:'Ayer', type:'info', unread:true, urgent:false },
+            { id:5, course:'Taller Saber-Pro Comunicativas', title:'Recordatorio de monitoria', desc:'Manana hay sesion de monitoria grupal a las 3:00 pm. Sala virtual ya publicada.', time:'Hace 2 dias', type:'info', unread:false, urgent:false },
+            { id:6, course:'SABER PRO INGLES', title:'Simulacro obligatorio', desc:'Debes presentar el simulacro de Speaking antes del 20 de mayo.', time:'Ayer', type:'warning', unread:false, urgent:true },
+            { id:7, course:'DESARROLLO FRONTEND-2622', title:'Entrega revisada', desc:'Tu Proyecto HTML/CSS ha sido calificado. Calificacion: 4.8 / 5.0', time:'Hace 4 dias', type:'success', unread:false, urgent:false },
+            { id:8, course:'SISTEMAS Y MODELOS-1780', title:'Material nuevo', desc:'Diapositivas de la Unidad 4 ya estan disponibles en el aula virtual.', time:'Hace 5 dias', type:'info', unread:false, urgent:false }
+        ];
+
+        let currentFilter = 'all';
+
+        function renderNotifications(filter = 'all') {
+            currentFilter = filter;
+            let filtered = [...notifications];
+            if (filter === 'unread') filtered = notifications.filter(n => n.unread);
+            if (filter === 'urgent') filtered = notifications.filter(n => n.urgent);
+
+            filtered.sort((a, b) => {
+                if (a.unread && !b.unread) return -1;
+                if (!a.unread && b.unread) return 1;
+                if (a.urgent && !b.urgent) return -1;
+                if (!a.urgent && b.urgent) return 1;
+                return b.id - a.id;
+            });
+
+            document.getElementById('notifList').innerHTML = filtered.map(n => `
+                <div class="notif-item ${n.unread ? 'unread' : ''} ${n.urgent ? 'urgent' : ''}"
+                     onclick="selectNotif(${n.id})" id="notif-${n.id}">
+                    <div class="notif-icon-sq icon-${n.type}">
+                        ${n.type === 'danger' ? '!' : n.type === 'warning' ? '!' : n.type === 'success' ? 'OK' : 'i'}
+                    </div>
+                    <div class="notif-body">
+                        <div class="notif-course">${n.course}${n.urgent ? ' &middot; URGENTE' : ''}</div>
+                        <div class="notif-title">${n.title}</div>
+                        <div class="notif-desc">${n.desc.substring(0, 48)}${n.desc.length > 48 ? '...' : ''}</div>
+                        <div class="notif-time">
+                            <i data-lucide="clock" style="width:9px;height:9px;"></i> ${n.time}
+                        </div>
+                    </div>
+                    ${n.unread ? '<div class="notif-dot"></div>' : ''}
+                </div>
+            `).join('');
+            updateBadge();
+            lucide.createIcons();
+        }
+
+        function updateBadge() {
+            const count = notifications.filter(n => n.unread).length;
+            const badge = document.getElementById('badgeCount');
+            if (badge) {
+                badge.textContent = count;
+                badge.style.display = count === 0 ? 'none' : 'flex';
+            }
+        }
+
+        function selectNotif(id) {
+            const n = notifications.find(x => x.id === id);
+            if (!n) return;
+            if (n.unread) {
+                n.unread = false;
+                updateBadge();
+                renderNotifications(currentFilter);
+            }
+            document.getElementById('previewContent').innerHTML = `
+                <div class="preview-detail">
+                    <div style="display:flex;align-items:flex-start;gap:0.55rem;">
+                        <div class="notif-icon-sq icon-${n.type}" style="width:36px;height:36px;font-size:0.85rem;">
+                            ${n.type === 'danger' ? '!' : n.type === 'warning' ? '!' : n.type === 'success' ? 'OK' : 'i'}
+                        </div>
+                        <div>
+                            <div style="font-size:0.62rem;font-weight:600;text-transform:uppercase;letter-spacing:0.03em;color:var(--text-muted);">${n.course}</div>
+                            <h3 style="font-size:0.92rem;font-weight:700;margin:0.12rem 0;color:var(--black);">${n.title}</h3>
+                            <div style="font-size:0.68rem;color:var(--text-muted);">
+                                <i data-lucide="clock" style="width:10px;height:10px;"></i> ${n.time}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="preview-message-box">${n.desc}</div>
+                    <div style="display:flex;gap:0.35rem;flex-wrap:wrap;">
+                        <button class="btn btn-primary" onclick="alert('Abriendo curso: ${n.course}')">
+                            <i data-lucide="external-link" style="width:11px;height:11px;"></i> Ir al curso
+                        </button>
+                        ${n.urgent ? `<button class="btn btn-danger" onclick="alert('Confirmacion enviada para: ${n.title}')">
+                            <i data-lucide="check-circle" style="width:11px;height:11px;"></i> Confirmar
+                        </button>` : ''}
+                        <button class="btn btn-outline" onclick="alert('Notificacion fijada.')">
+                            <i data-lucide="pin" style="width:11px;height:11px;"></i> Fijar
+                        </button>
+                    </div>
+                </div>`;
+            lucide.createIcons();
+        }
+
+        function filterNotifs(filter, btn) {
+            document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+            renderNotifications(filter);
+        }
+
+        renderNotifications();
+    </script>
+</body>
+</html>

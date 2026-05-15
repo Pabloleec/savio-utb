@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAVIO UTB - Dashboard Unificado</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary: #1a56db;
+            --primary-light: #e8f0fe;
+            --danger: #dc2626;
+            --danger-light: #fee2e2;
+            --warning: #ea580c;
+            --warning-light: #ffedd5;
+            --success: #16a34a;
+            --info: #0891b2;
+            --bg: #f1f5f9;
+            --card-bg: rgba(255,255,255,0.85);
+            --text: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --border: #e2e8f0;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+            --shadow: 0 8px 25px -8px rgba(0,0,0,0.08);
+            --shadow-lg: 0 16px 35px -12px rgba(0,0,0,0.12);
+            --radius: 20px;
+            --radius-sm: 14px;
+            --radius-xs: 10px;
+            --transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(150deg, #eff6ff 0%, #f8fafc 25%, #fff7ed 60%, #fef2f2 100%);
+            background-attachment: fixed;
+            min-height:100vh;
+            color:var(--text);
+            padding:1rem;
+            -webkit-font-smoothing:antialiased;
+        }
+
+        /* Navbar */
+        .navbar {
+            max-width:1400px;
+            margin:0 auto 1.25rem;
+            background:var(--card-bg);
+            backdrop-filter:blur(24px);
+            -webkit-backdrop-filter:blur(24px);
+            border-radius:var(--radius);
+            border:1px solid rgba(255,255,255,0.7);
+            box-shadow:var(--shadow);
+            padding:0.65rem 1.5rem;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:1rem;
+            flex-wrap:wrap;
+            position:sticky;
+            top:1rem;
+            z-index:100;
+        }
+        .nav-brand {
+            display:flex;
+            align-items:center;
+            gap:0.65rem;
+            text-decoration:none;
+            color:var(--text);
+            font-weight:700;
+            font-size:1.15rem;
+            letter-spacing:-0.02em;
+        }
+        .nav-brand-icon {
+            width:38px;
+            height:38px;
+            background:linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius:var(--radius-xs);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            color:white;
+            font-weight:800;
+            font-size:0.85rem;
+        }
+        .nav-links {
+            display:flex;
+            gap:0.2rem;
+            list-style:none;
+            flex-wrap:wrap;
+        }
+        .nav-links a {
+            text-decoration:none;
+            color:var(--text-secondary);
+            font-weight:500;
+            font-size:0.85rem;
+            padding:0.45rem 0.85rem;
+            border-radius:2rem;
+            transition:var(--transition);
+            white-space:nowrap;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            background:var(--primary-light);
+            color:var(--primary);
+        }
+        .nav-actions {
+            display:flex;
+            align-items:center;
+            gap:0.75rem;
+        }
+        .btn-icon {
+            width:40px; height:40px; border-radius:50%; border:1.5px solid var(--border);
+            background:white; cursor:pointer; display:flex; align-items:center; justify-content:center;
+            transition:var(--transition); color:var(--text-secondary); position:relative;
+        }
+        .btn-icon:hover {
+            border-color:var(--primary);
+            box-shadow:0 0 0 6px rgba(26,86,219,0.08);
+        }
+        .badge-dot {
+            position:absolute; top:-4px; right:-4px; background:var(--danger);
+            color:white; font-size:0.65rem; font-weight:700; min-width:20px; height:20px;
+            border-radius:10px; display:flex; align-items:center; justify-content:center;
+            border:2px solid white; padding:0 5px; box-shadow:0 3px 8px rgba(220,38,38,0.35);
+        }
+        .user-chip {
+            display:flex; align-items:center; gap:0.5rem; background:var(--bg);
+            border-radius:2rem; padding:0.3rem 0.75rem 0.3rem 0.3rem; border:1px solid var(--border);
+            cursor:pointer; transition:var(--transition); font-size:0.85rem; font-weight:500;
+            color:var(--text-secondary);
+        }
+        .user-chip:hover { border-color:var(--primary); }
+        .avatar {
+            width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg,#3b82f6,#1d4ed8);
+            display:flex; align-items:center; justify-content:center; color:white; font-weight:700; font-size:0.7rem;
+        }
+
+        /* Layout */
+        .dashboard {
+            max-width:1400px;
+            margin:0 auto;
+            display:grid;
+            grid-template-columns: 1fr 340px;
+            gap:1.25rem;
+            align-items:start;
+        }
+        .glass-card {
+            background:var(--card-bg);
+            backdrop-filter:blur(20px);
+            -webkit-backdrop-filter:blur(20px);
+            border-radius:var(--radius);
+            border:1px solid rgba(255,255,255,0.7);
+            box-shadow:var(--shadow);
+            padding:1.5rem;
+            transition:var(--transition);
+        }
+        .glass-card:hover { box-shadow:var(--shadow-lg); }
+
+        .section-title {
+            font-size:1.1rem;
+            font-weight:700;
+            letter-spacing:-0.01em;
+            margin-bottom:1rem;
+            display:flex;
+            align-items:center;
+            gap:0.5rem;
+        }
+
+        /* Course cards */
+        .course-list { display:flex; flex-direction:column; gap:0.85rem; }
+        .course-card {
+            background:white;
+            border-radius:var(--radius-sm);
+            padding:1.1rem 1.25rem;
+            border:1px solid var(--border);
+            cursor:pointer;
+            transition:var(--transition);
+            display:flex;
+            align-items:center;
+            gap:1rem;
+            position:relative;
+            overflow:hidden;
+        }
+        .course-card:hover {
+            border-color:var(--primary);
+            box-shadow:var(--shadow);
+            transform:translateY(-2px);
+        }
+        .course-card::before {
+            content:'';
+            position:absolute;
+            left:0; top:0; bottom:0;
+            width:4px;
+            background:var(--primary);
+            border-radius:0 4px 4px 0;
+            opacity:0;
+            transition:var(--transition);
+        }
+        .course-card:hover::before { opacity:1; }
+        .course-icon {
+            width:44px; height:44px; border-radius:var(--radius-xs);
+            display:flex; align-items:center; justify-content:center;
+            font-size:1.2rem; flex-shrink:0;
+            font-weight:700; color:white;
+        }
+        .icon-blue { background:linear-gradient(135deg,#3b82f6,#2563eb); }
+        .icon-purple { background:linear-gradient(135deg,#8b5cf6,#7c3aed); }
+        .icon-emerald { background:linear-gradient(135deg,#10b981,#059669); }
+        .icon-rose { background:linear-gradient(135deg,#f43f5e,#e11d48); }
+        .icon-amber { background:linear-gradient(135deg,#f59e0b,#d97706); }
+
+        .course-info { flex:1; min-width:0; }
+        .course-name {
+            font-weight:600; font-size:0.95rem; margin-bottom:0.15rem;
+            white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+        }
+        .course-code { font-size:0.75rem; color:var(--text-muted); }
+        .course-badges {
+            display:flex; gap:0.5rem; flex-shrink:0; flex-wrap:wrap;
+        }
+        .badge-count {
+            font-size:0.7rem; font-weight:700; padding:0.35rem 0.7rem;
+            border-radius:2rem; display:flex; align-items:center; gap:0.3rem;
+            white-space:nowrap;
+        }
+        .badge-red { background:var(--danger-light); color:var(--danger); }
+        .badge-orange { background:var(--warning-light); color:var(--warning); }
+        .badge-green { background:#dcfce7; color:#16a34a; }
+
+        /* Sidebar */
+        .sidebar { display:flex; flex-direction:column; gap:1.25rem; }
+        .quick-actions { display:grid; grid-template-columns:1fr 1fr; gap:0.65rem; }
+        .quick-action {
+            background:white; border-radius:var(--radius-xs); padding:0.85rem;
+            border:1px solid var(--border); cursor:pointer; transition:var(--transition);
+            text-align:center; font-size:0.8rem; font-weight:500; color:var(--text-secondary);
+            display:flex; flex-direction:column; align-items:center; gap:0.4rem;
+        }
+        .quick-action:hover {
+            border-color:var(--primary); background:var(--primary-light);
+            color:var(--primary); transform:translateY(-2px);
+        }
+        .mini-calendar { font-size:0.8rem; }
+        .mini-cal-row { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; text-align:center; margin-bottom:0.4rem; }
+        .mini-day { padding:0.35rem 0; border-radius:6px; font-weight:500; cursor:pointer; transition:var(--transition); font-size:0.75rem; }
+        .mini-day:hover { background:var(--primary-light); }
+        .mini-day.has-event { font-weight:700; }
+        .mini-day.has-event.red { color:var(--danger); }
+        .mini-day.has-event.orange { color:var(--warning); }
+        .mini-day.today { background:var(--primary); color:white; }
+
+        .notif-mini-item {
+            display:flex; gap:0.5rem; padding:0.6rem; border-radius:var(--radius-xs);
+            cursor:pointer; transition:var(--transition); font-size:0.8rem; border:1px solid transparent;
+        }
+        .notif-mini-item:hover { background:var(--bg); border-color:var(--border); }
+        .notif-mini-item.urgent { border-left:3px solid var(--danger); }
+
+        @keyframes fadeSlideIn {
+            from { opacity:0; transform:translateY(10px); }
+            to { opacity:1; transform:translateY(0); }
+        }
+        .animate-in { animation:fadeSlideIn 0.5s ease forwards; }
+
+        @media (max-width:1100px) {
+            .dashboard { grid-template-columns:1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="#" class="nav-brand">
+            <div class="nav-brand-icon">SAVIO</div>
+            <span>SAVIO UTB</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="#">Biblioteca</a></li>
+            <li><a href="#">Banner</a></li>
+            <li><a href="#">Reglamento</a></li>
+            <li><a href="#" class="active">Inicio</a></li>
+        </ul>
+        <div class="nav-actions">
+            <button class="btn-icon" title="Notificaciones" onclick="document.getElementById('notifSidebar').scrollIntoView({behavior:'smooth'}); alert('Tienes 4 notificaciones sin leer. Revisa el panel derecho.')">
+                <i data-lucide="bell" style="width:19px;height:19px;"></i>
+                <span class="badge-dot">4</span>
+            </button>
+            <button class="btn-icon" title="Mensajes" onclick="alert('Mensajes: Tienes 2 mensajes nuevos de profesores.')">
+                <i data-lucide="message-circle" style="width:19px;height:19px;"></i>
+                <span class="badge-dot" style="background:var(--warning);">2</span>
+            </button>
+            <div class="user-chip" title="Pablo Leal Echenique" onclick="alert('Menú de usuario: Perfil | Calificaciones | Calendario | Archivos | Informes | Preferencias | Cerrar sesión')">
+                <div class="avatar">PL</div>
+                <span>Pablo Leal</span>
+                <i data-lucide="chevron-down" style="width:14px;height:14px;"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard -->
+    <div class="dashboard">
+        <!-- COLUMNA PRINCIPAL -->
+        <div class="glass-card animate-in">
+            <div class="section-title">
+                <span>Mis Cursos</span>
+                <span style="font-size:0.75rem;font-weight:400;color:var(--text-muted);">(Ordenados por más reciente)</span>
+            </div>
+            <div class="course-list" id="courseList">
+                <!-- Cursos generados por JS -->
+            </div>
+        </div>
+
+        <!-- SIDEBAR -->
+        <div class="sidebar" id="notifSidebar">
+            <!-- Acciones rápidas -->
+            <div class="glass-card">
+                <div class="section-title">Acciones rápidas</div>
+                <div class="quick-actions">
+                    <div class="quick-action" onclick="alert('Abriendo calendario completo...')">
+                        <i data-lucide="calendar" style="width:22px;height:22px;"></i>
+                        Calendario
+                    </div>
+                    <div class="quick-action" onclick="alert('Abriendo calificaciones en Banner...')">
+                        <i data-lucide="award" style="width:22px;height:22px;"></i>
+                        Notas
+                    </div>
+                    <div class="quick-action" onclick="alert('Abriendo archivos privados...')">
+                        <i data-lucide="folder" style="width:22px;height:22px;"></i>
+                        Archivos
+                    </div>
+                    <div class="quick-action" onclick="alert('Abriendo perfil de Pablo Leal Echenique...')">
+                        <i data-lucide="user" style="width:22px;height:22px;"></i>
+                        Perfil
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mini calendario -->
+            <div class="glass-card">
+                <div class="section-title">Próximas entregas</div>
+                <div class="mini-calendar" id="miniCalendar"></div>
+                <div style="display:flex;gap:0.75rem;font-size:0.7rem;color:var(--text-muted);margin-top:0.5rem;">
+                    <span>Reportada</span><span>Sin reportar</span>
+                </div>
+            </div>
+
+            <!-- Mini notificaciones -->
+            <div class="glass-card">
+                <div class="section-title">Últimas alertas</div>
+                <div id="miniNotifs">
+                    <div class="notif-mini-item urgent" onclick="alert('DESARROLLO FRONTEND: Clase cancelada jueves 15 mayo. Reprogramada lunes 19.')">
+                        <span></span><span><strong>Clase cancelada</strong><br>DESARROLLO FRONTEND</span>
+                    </div>
+                    <div class="notif-mini-item urgent" onclick="alert('SABER PRO INGLÉS: Simulacro obligatorio de Speaking antes del 20 de mayo.')">
+                        <span></span><span><strong>Simulacro

@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAVIO UTB · Calendario</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --white: #ffffff;
+            --bg: #f6f7fb;
+            --primary: #0007d6;
+            --primary-light: #eaeaFF;
+            --primary-glow: rgba(0, 7, 214, 0.15);
+            --black: #0a0a0a;
+            --text: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --danger: #b91c1c;
+            --danger-light: #fee2e2;
+            --danger-glow: rgba(185, 28, 28, 0.25);
+            --warning: #c2410c;
+            --warning-light: #ffedd5;
+            --warning-glow: rgba(194, 65, 12, 0.25);
+            --success: #16a34a;
+            --border: #e5e7eb;
+            --border-light: #f0f0f0;
+            --shadow-xs: 0 1px 2px rgba(0,0,0,0.03);
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+            --shadow: 0 6px 24px rgba(0,0,0,0.06);
+            --radius-xl: 22px;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --navbar-height: 52px;
+            --content-gap: 0.85rem;
+            --page-padding: 1rem;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+            padding: var(--page-padding);
+        }
+        .app-container {
+            width: 100%;
+            max-width: 1200px;
+            height: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: var(--content-gap);
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 0 1.25rem;
+            height: var(--navbar-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-shrink: 0;
+            box-shadow: var(--shadow-xs);
+        }
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--black);
+            font-weight: 700;
+            font-size: 1.05rem;
+            letter-spacing: -0.02em;
+            flex-shrink: 0;
+        }
+        .nav-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-sm);
+            object-fit: cover;
+        }
+        .nav-links {
+            display: flex; gap: 0.1rem; list-style: none;
+        }
+        .nav-links a {
+            text-decoration: none; color: var(--text-secondary);
+            font-weight: 500; font-size: 0.78rem;
+            padding: 0.35rem 0.7rem; border-radius: 2rem;
+            transition: var(--transition); white-space: nowrap;
+        }
+        .nav-links a:hover, .nav-links a.active { background: var(--primary-light); color: var(--primary); }
+        .nav-actions { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
+        .btn-icon {
+            width: 34px; height: 34px;
+            border-radius: 50%; border: 1.5px solid var(--border);
+            background: var(--white); cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: var(--transition); color: var(--text-secondary); position: relative;
+        }
+        .btn-icon:hover { border-color: var(--primary); box-shadow: 0 0 0 5px rgba(0,7,214,0.04); }
+        .icon-badge {
+            position: absolute; top: -5px; right: -5px;
+            background: var(--danger); color: white;
+            font-size: 0.55rem; font-weight: 700;
+            min-width: 17px; height: 17px; border-radius: 9px;
+            display: flex; align-items: center; justify-content: center;
+            border: 2px solid white; box-shadow: 0 0 8px var(--danger-glow);
+        }
+        .icon-badge.warn { background: var(--warning); box-shadow: 0 0 8px var(--warning-glow); }
+        .user-chip {
+            display: flex; align-items: center; gap: 0.35rem;
+            background: var(--bg); border-radius: 2rem;
+            padding: 0.22rem 0.65rem 0.22rem 0.22rem;
+            border: 1px solid var(--border); cursor: pointer;
+            transition: var(--transition); font-size: 0.78rem;
+            font-weight: 500; color: var(--text-secondary);
+        }
+        .user-chip:hover { border-color: var(--primary); }
+        .avatar {
+            width: 26px; height: 26px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), #1e3a8a);
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: 700; font-size: 0.6rem;
+        }
+
+        /* CALENDAR DASHBOARD */
+        .calendar-dashboard {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--content-gap);
+            min-height: 0;
+        }
+        .panel {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 1.1rem;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: var(--shadow-xs);
+            transition: var(--transition);
+        }
+        .panel:hover { box-shadow: var(--shadow); }
+
+        .cal-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 0.5rem; flex-shrink: 0; flex-wrap: wrap; gap: 0.4rem;
+        }
+        .cal-month {
+            font-size: 1rem; font-weight: 700; letter-spacing: -0.02em;
+            display: flex; align-items: center; gap: 0.4rem; color: var(--black);
+        }
+        .cal-nav {
+            width: 30px; height: 30px; border-radius: 50%;
+            border: 1.5px solid var(--border); background: var(--white);
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: var(--transition); color: var(--text-secondary);
+        }
+        .cal-nav:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+        .cal-legend {
+            display: flex; gap: 0.75rem; font-size: 0.62rem;
+            font-weight: 500; color: var(--text-muted);
+        }
+        .legend-dot {
+            display: inline-block; width: 7px; height: 7px;
+            border-radius: 50%; margin-right: 0.2rem; vertical-align: middle;
+        }
+        .legend-dot.reported { background: var(--danger); box-shadow: 0 0 5px var(--danger-glow); }
+        .legend-dot.unreported { background: var(--warning); box-shadow: 0 0 5px var(--warning-glow); }
+
+        .cal-grid-wrapper { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+        .cal-day-names {
+            display: grid; grid-template-columns: repeat(7, 1fr);
+            gap: 2px; text-align: center; flex-shrink: 0; margin-bottom: 2px;
+        }
+        .cal-day-name {
+            font-size: 0.6rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.04em; color: var(--text-muted); padding: 0.2rem 0;
+        }
+        .cal-grid {
+            display: grid; grid-template-columns: repeat(7, 1fr);
+            gap: 2px; flex: 1;
+        }
+        .cal-day {
+            aspect-ratio: 1 / 1; border-radius: var(--radius-sm);
+            background: var(--bg); border: 1.5px solid transparent;
+            cursor: pointer; display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            font-weight: 500; font-size: 0.73rem; position: relative;
+            transition: var(--transition); color: var(--text-secondary); min-width: 0;
+        }
+        .cal-day:hover {
+            background: var(--white); border-color: var(--primary);
+            color: var(--text); transform: scale(1.05); z-index: 2;
+        }
+        .cal-day.today {
+            background: var(--primary-light); border-color: var(--primary);
+            color: var(--primary); font-weight: 700;
+        }
+        .cal-day.selected {
+            background: var(--primary); color: white; border-color: var(--primary);
+            box-shadow: 0 0 16px var(--primary-glow); transform: scale(1.06); z-index: 3;
+        }
+        .cal-day.empty { background: transparent; border: none; cursor: default; }
+        .cal-day.empty:hover { transform: none; }
+        .cal-day .indicators { display: flex; gap: 2px; margin-top: 1px; }
+        .indicator-dot { width: 5px; height: 5px; border-radius: 50%; }
+        .indicator-dot.red { background: var(--danger); box-shadow: 0 0 4px var(--danger-glow); }
+        .indicator-dot.orange { background: var(--warning); box-shadow: 0 0 4px var(--warning-glow); }
+        .cal-day.selected .indicator-dot.red { background: white; }
+        .cal-day.selected .indicator-dot.orange { background: #fbbf24; }
+
+        .detail-panel { display: flex; flex-direction: column; overflow: hidden; }
+        .detail-header {
+            display: flex; align-items: center; justify-content: space-between;
+            flex-shrink: 0; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.3rem;
+        }
+        .detail-date { font-size: 0.88rem; font-weight: 700; color: var(--black); }
+        .detail-badges { display: flex; gap: 0.3rem; }
+        .badge {
+            font-size: 0.6rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.03em; padding: 0.2rem 0.5rem; border-radius: 2rem;
+        }
+        .badge-danger { background: var(--danger-light); color: var(--danger); }
+        .badge-warning { background: var(--warning-light); color: var(--warning); }
+
+        .detail-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .detail-scroll {
+            flex: 1; display: flex; flex-direction: column; gap: 0.4rem;
+            overflow-y: auto; padding-right: 0.15rem;
+        }
+        .detail-scroll::-webkit-scrollbar { width: 3px; }
+        .detail-scroll::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 2px; }
+        .detail-scroll::-webkit-scrollbar-track { background: transparent; }
+
+        .activity-card {
+            background: var(--bg); border-radius: var(--radius-md);
+            padding: 0.6rem 0.75rem; border: 1px solid var(--border-light);
+            cursor: pointer; transition: var(--transition); flex-shrink: 0;
+        }
+        .activity-card:hover { border-color: var(--primary); background: var(--white); }
+        .activity-card.reported { border-left: 3px solid var(--danger); }
+        .activity-card.unreported { border-left: 3px solid var(--warning); }
+        .activity-course {
+            font-size: 0.58rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.03em; color: var(--text-muted); margin-bottom: 0.1rem;
+        }
+        .activity-title { font-weight: 600; font-size: 0.76rem; margin-bottom: 0.1rem; color: var(--black); }
+        .activity-meta {
+            font-size: 0.65rem; color: var(--text-muted);
+            display: flex; align-items: center; gap: 0.35rem; margin-bottom: 0.35rem;
+        }
+        .btn {
+            padding: 0.28rem 0.6rem; border-radius: 2rem; font-weight: 600;
+            font-size: 0.63rem; cursor: pointer; border: none;
+            transition: var(--transition); display: inline-flex;
+            align-items: center; gap: 0.2rem; font-family: var(--font);
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: #0005b0; box-shadow: 0 0 10px var(--primary-glow); }
+        .btn-outline { background: transparent; color: var(--primary); border: 1.5px solid var(--primary); }
+        .btn-outline:hover { background: var(--primary-light); }
+        .btn-outline-warning { background: transparent; color: var(--warning); border: 1.5px solid var(--warning); }
+        .btn-outline-warning:hover { background: var(--warning-light); }
+
+        .empty-state {
+            flex: 1; display: flex; flex-direction: column; align-items: center;
+            justify-content: center; color: var(--text-muted); text-align: center; gap: 0.35rem;
+        }
+
+        @media (max-width: 800px) {
+            .calendar-dashboard { grid-template-columns: 1fr; }
+            body { overflow-y: auto; }
+            .app-container { height: auto; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <nav class="navbar">
+            <a href="#" class="nav-brand">
+                <!-- Reemplaza la URL con el enlace directo de tu imagen de Imgur -->
+                <img src="https://i.postimg.cc/Z50fZBRh/logo-savio.png" alt="Logo SAVIO" class="nav-logo">
+                SAVIO UTB
+            </a>
+            <ul class="nav-links">
+                <li><a href="#">Biblioteca</a></li>
+                <li><a href="#">Banner</a></li>
+                <li><a href="#">Reglamento</a></li>
+                <li><a href="#" class="active">Calendario</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="btn-icon" title="Notificaciones" onclick="alert('Centro de notificaciones: 4 sin leer.')">
+                    <i data-lucide="bell" style="width:16px;height:16px;"></i>
+                    <span class="icon-badge">4</span>
+                </button>
+                <button class="btn-icon" title="Mensajes" onclick="alert('Bandeja de mensajes: 2 nuevos.')">
+                    <i data-lucide="message-circle" style="width:16px;height:16px;"></i>
+                    <span class="icon-badge warn">2</span>
+                </button>
+                <div class="user-chip" onclick="alert('Menu de usuario: Perfil | Calificaciones | Insignias | Cerrar sesion')">
+                    <div class="avatar">PL</div>
+                    Pablo Leal
+                </div>
+            </div>
+        </nav>
+
+        <div class="calendar-dashboard">
+            <div class="panel">
+                <div class="cal-header">
+                    <div class="cal-month">
+                        <button class="cal-nav" id="prevMonth"><i data-lucide="chevron-left" style="width:15px;height:15px;"></i></button>
+                        <span id="monthYearDisplay">Mayo 2026</span>
+                        <button class="cal-nav" id="nextMonth"><i data-lucide="chevron-right" style="width:15px;height:15px;"></i></button>
+                    </div>
+                    <div class="cal-legend">
+                        <span><span class="legend-dot reported"></span> Reportada</span>
+                        <span><span class="legend-dot unreported"></span> No reportada</span>
+                    </div>
+                </div>
+                <div class="cal-grid-wrapper">
+                    <div class="cal-day-names" id="dayNames"></div>
+                    <div class="cal-grid" id="calendarDays"></div>
+                </div>
+            </div>
+
+            <div class="panel detail-panel">
+                <div class="detail-header">
+                    <span class="detail-date" id="detailDate">Selecciona un dia</span>
+                    <div class="detail-badges" id="detailBadges"></div>
+                </div>
+                <div class="detail-content" id="detailContent">
+                    <div class="empty-state">
+                        <i data-lucide="calendar-search" style="width:28px;height:28px;opacity:0.25;"></i>
+                        <p style="font-size:0.75rem;">Haz clic en un dia resaltado</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const activitiesData = {
+            '2026-05-14': [
+                { course: 'DESARROLLO FRONTEND-2622', title: 'Entrega Proyecto HTML/CSS', time: '23:59', reported: true, type: 'Tarea' },
+                { course: 'SISTEMAS Y MODELOS-1780', title: 'Diagrama de Casos de Uso', time: '18:00', reported: false, type: 'Taller' }
+            ],
+            '2026-05-18': [{ course: 'SABER PRO INGLES', title: 'Mock Test Reading', time: '23:55', reported: true, type: 'Cuestionario' }],
+            '2026-05-20': [
+                { course: 'DESARROLLO FRONTEND-2622', title: 'Avance Proyecto Final', time: '23:59', reported: false, type: 'Avance' },
+                { course: 'Taller Saber-Pro Comunicativas', title: 'Ensayo Argumentativo', time: '23:59', reported: true, type: 'Ensayo' }
+            ],
+            '2026-05-25': [{ course: 'SISTEMAS Y MODELOS-1780', title: 'Sustentacion Parcial', time: '14:00', reported: true, type: 'Exposicion' }],
+            '2026-05-28': [
+                { course: 'SABER PRO INGLES', title: 'Listening Comprehension', time: '23:55', reported: false, type: 'Cuestionario' },
+                { course: 'Taller Saber-Pro Comunicativas', title: 'Comprension Lectora', time: '23:59', reported: false, type: 'Taller' }
+            ]
+        };
+
+        let currentMonth = 4, currentYear = 2026, selectedDate = null;
+        const monthNames = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+                           'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+        const dayNamesShort = ['Dom','Lun','Mar','Mie','Jue','Vie','Sab'];
+
+        function getKey(y, m, d) { return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`; }
+
+        function renderCalendar() {
+            document.getElementById('monthYearDisplay').textContent = `${monthNames[currentMonth]} ${currentYear}`;
+            document.getElementById('dayNames').innerHTML = dayNamesShort.map(d => `<div class="cal-day-name">${d}</div>`).join('');
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            const today = new Date();
+            const todayStr = getKey(today.getFullYear(), today.getMonth(), today.getDate());
+            let html = '';
+            for (let i = 0; i < firstDay; i++) html += '<div class="cal-day empty"></div>';
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = getKey(currentYear, currentMonth, day);
+                const acts = activitiesData[dateStr] || [];
+                const hasR = acts.some(a => a.reported), hasU = acts.some(a => !a.reported);
+                let cls = 'cal-day';
+                if (dateStr === todayStr) cls += ' today';
+                if (dateStr === selectedDate) cls += ' selected';
+                html += `<div class="${cls}" data-date="${dateStr}" onclick="selectDay('${dateStr}', this)">
+                    <span class="day-number">${day}</span>`;
+                if (hasR || hasU) {
+                    html += '<div class="indicators">';
+                    if (hasR) html += '<span class="indicator-dot red"></span>';
+                    if (hasU) html += '<span class="indicator-dot orange"></span>';
+                    html += '</div>';
+                }
+                html += '</div>';
+            }
+            document.getElementById('calendarDays').innerHTML = html;
+            lucide.createIcons();
+        }
+
+        function selectDay(dateStr, el) {
+            document.querySelectorAll('.cal-day.selected').forEach(e => e.classList.remove('selected'));
+            if (el) el.classList.add('selected');
+            selectedDate = dateStr;
+            const [y, m, d] = dateStr.split('-');
+            const dateObj = new Date(+y, +m - 1, +d);
+            const formatted = dateObj.toLocaleDateString('es-CO', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            document.getElementById('detailDate').textContent = formatted;
+            const acts = activitiesData[dateStr] || [];
+            const badgesEl = document.getElementById('detailBadges');
+            const contentEl = document.getElementById('detailContent');
+            if (acts.length === 0) {
+                badgesEl.innerHTML = '';
+                contentEl.innerHTML = `<div class="empty-state">
+                    <i data-lucide="check-circle" style="width:26px;height:26px;color:var(--success);"></i>
+                    <p style="font-size:0.72rem;">Sin entregas este dia</p>
+                </div>`;
+            } else {
+                const rCount = acts.filter(a => a.reported).length;
+                const uCount = acts.filter(a => !a.reported).length;
+                let bHtml = '';
+                if (uCount > 0) bHtml += `<span class="badge badge-warning">${uCount} sin reportar</span>`;
+                if (rCount > 0) bHtml += `<span class="badge badge-danger">${rCount} reportada(s)</span>`;
+                badgesEl.innerHTML = bHtml;
+                contentEl.innerHTML = `<div class="detail-scroll">${acts.map(a => `
+                    <div class="activity-card ${a.reported ? 'reported' : 'unreported'}">
+                        <div class="activity-course">${a.course}</div>
+                        <div class="activity-title">${a.title}</div>
+                        <div class="activity-meta">
+                            <i data-lucide="clock" style="width:10px;height:10px;"></i> ${a.time} · ${a.type}
+                        </div>
+                        <div style="display:flex;gap:0.3rem;flex-wrap:wrap;">
+                            <button class="btn btn-primary" onclick="alert('Abriendo: ${a.title}\\nCurso: ${a.course}')">
+                                <i data-lucide="external-link" style="width:10px;height:10px;"></i> Ver
+                            </button>
+                            ${a.reported ?
+                                `<button class="btn btn-outline" onclick="alert('Esta actividad ya esta reportada en el calendario de SAVIO.')">
+                                    <i data-lucide="calendar-check" style="width:10px;height:10px;"></i> En calendario
+                                </button>` :
+                                `<button class="btn btn-outline-warning" onclick="alert('Esta actividad NO esta en el calendario. Deseas reportarla?')">
+                                    <i data-lucide="alert-triangle" style="width:10px;height:10px;"></i> Reportar
+                                </button>`
+                            }
+                        </div>
+                    </div>`).join('')}</div>`;
+            }
+            lucide.createIcons();
+        }
+
+        function resetDetail() {
+            selectedDate = null;
+            renderCalendar();
+            document.getElementById('detailDate').textContent = 'Selecciona un dia';
+            document.getElementById('detailBadges').innerHTML = '';
+            document.getElementById('detailContent').innerHTML = `<div class="empty-state">
+                <i data-lucide="calendar-search" style="width:28px;height:28px;opacity:0.25;"></i>
+                <p style="font-size:0.75rem;">Haz clic en un dia resaltado</p>
+            </div>`;
+            lucide.createIcons();
+        }
+
+        document.getElementById('prevMonth').addEventListener('click', () => {
+            currentMonth--;
+            if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+            resetDetail();
+        });
+        document.getElementById('nextMonth').addEventListener('click', () => {
+            currentMonth++;
+            if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+            resetDetail();
+        });
+
+        renderCalendar();
+    </script>
+</body>
+</html>
