@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAVIO UTB - Calendario Inteligente de Entregas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary: #1a56db;
+            --primary-light: #e8f0fe;
+            --danger: #dc2626;
+            --danger-light: #fee2e2;
+            --danger-dark: #991b1b;
+            --warning: #ea580c;
+            --warning-light: #ffedd5;
+            --warning-dark: #9a3412;
+            --success: #16a34a;
+            --success-light: #dcfce7;
+            --bg: #f8fafc;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --text: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --border: #e2e8f0;
+            --border-light: #f1f5f9;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            --shadow: 0 10px 25px -8px rgba(0,0,0,0.08);
+            --shadow-lg: 0 20px 40px -12px rgba(0,0,0,0.12);
+            --radius: 20px;
+            --radius-sm: 12px;
+            --radius-xs: 8px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(160deg, #eff6ff 0%, #f8fafc 30%, #fff7ed 70%, #fef2f2 100%);
+            min-height: 100vh;
+            color: var(--text);
+            padding: 1.5rem;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Navbar */
+        .savio-navbar {
+            max-width: 1400px;
+            margin: 0 auto 1.5rem;
+            background: var(--card-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-radius: var(--radius);
+            border: 1px solid rgba(255,255,255,0.7);
+            box-shadow: var(--shadow);
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .savio-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: -0.02em;
+        }
+        .savio-logo-img {
+            height: 38px;
+            width: auto;
+            border-radius: var(--radius-xs);
+        }
+        .savio-nav-links {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+        .savio-nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.875rem;
+            padding: 0.5rem 0.875rem;
+            border-radius: 2rem;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+        .savio-nav-links a:hover,
+        .savio-nav-links a.active {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg);
+            border-radius: 2rem;
+            padding: 0.375rem 0.75rem 0.375rem 0.375rem;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        .user-badge:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-sm);
+        }
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+
+        /* Layout */
+        .dashboard-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--radius);
+            border: 1px solid rgba(255,255,255,0.7);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            transition: var(--transition);
+        }
+        .glass-card:hover { box-shadow: var(--shadow-lg); }
+
+        /* Header */
+        .cal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+        .cal-month-year {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .cal-nav-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            color: var(--text-secondary);
+        }
+        .cal-nav-btn:hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .cal-legend {
+            display: flex;
+            gap: 1.25rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        .legend-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 0.375rem;
+            vertical-align: middle;
+        }
+        .legend-dot.reported { background: var(--danger); }
+        .legend-dot.unreported { background: var(--warning); }
+
+        /* Calendar grid */
+        .cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+            text-align: center;
+        }
+        .cal-day-name {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            padding: 0.5rem 0;
+        }
+        .cal-day {
+            aspect-ratio: 1 / 1;
+            border-radius: var(--radius-sm);
+            background: rgba(255,255,255,0.5);
+            border: 1px solid transparent;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            font-size: 0.9rem;
+            position: relative;
+            transition: var(--transition);
+            color: var(--text);
+            min-width: 44px;
+        }
+        .cal-day:hover {
+            background: white;
+            border-color: var(--primary);
+            box-shadow: var(--shadow-sm);
+            transform: translateY(-2px);
+            z-index: 2;
+        }
+        .cal-day.today {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            font-weight: 700;
+            box-shadow: 0 0 0 3px rgba(26,86,219,0.2);
+        }
+        .cal-day.empty { cursor: default; background: transparent; border: none; }
+        .cal-day.empty:hover { transform: none; box-shadow: none; }
+        .cal-day .day-number { z-index: 1; }
+        .cal-day .indicators {
+            display: flex;
+            gap: 3px;
+            margin-top: 2px;
+            z-index: 1;
+        }
+        .indicator-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+        }
+        .indicator-dot.red { background: var(--danger); box-shadow: 0 0 6px rgba(220,38,38,0.4); }
+        .indicator-dot.orange { background: var(--warning); box-shadow: 0 0 6px rgba(234,88,12,0.4); }
+        .cal-day.selected {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 8px 20px -6px rgba(26,86,219,0.5);
+            transform: scale(1.05);
+            z-index: 3;
+        }
+        .cal-day.selected .indicator-dot.red { background: white; box-shadow: 0 0 6px rgba(255,255,255,0.6); }
+        .cal-day.selected .indicator-dot.orange { background: #fbbf24; box-shadow: 0 0 6px rgba(251,191,36,0.6); }
+
+        /* Detail panel */
+        .detail-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .detail-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .detail-date {
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+        .detail-badge {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            padding: 0.3rem 0.75rem;
+            border-radius: 2rem;
+        }
+        .badge-danger { background: var(--danger-light); color: var(--danger-dark); }
+        .badge-warning { background: var(--warning-light); color: var(--warning-dark); }
+        .badge-success { background: var(--success-light); color: var(--success); }
+
+        .activity-card {
+            background: white;
+            border-radius: var(--radius-sm);
+            padding: 1rem;
+            border: 1px solid var(--border-light);
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .activity-card:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-sm);
+        }
+        .activity-card.reported { border-left: 4px solid var(--danger); }
+        .activity-card.unreported { border-left: 4px solid var(--warning); }
+        .activity-course {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+        }
+        .activity-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+        }
+        .activity-meta {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .activity-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            font-family: inherit;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover { background: #1e40af; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(26,86,219,0.4); }
+        .btn-outline {
+            background: white;
+            color: var(--primary);
+            border: 1.5px solid var(--primary);
+        }
+        .btn-outline:hover { background: var(--primary-light); }
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+        }
+        .empty-state i { opacity: 0.5; margin-bottom: 0.5rem; }
+
+        /* Animaciones */
+        @keyframes fadeSlideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-in { animation: fadeSlideIn 0.4s ease forwards; }
+
+        @media (max-width: 1000px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="savio-navbar">
+        <a href="#" class="savio-logo">
+            <div class="user-avatar" style="border-radius:var(--radius-xs); width:38px; height:38px; font-size:0.7rem;">SAVIO</div>
+            <span>SAVIO UTB</span>
+        </a>
+        <ul class="savio-nav-links">
+            <li><a href="#">Biblioteca</a></li>
+            <li><a href="#">Banner</a></li>
+            <li><a href="#">Reglamento</a></li>
+            <li><a href="#" class="active">Calendario</a></li>
+        </ul>
+        <div class="user-badge" title="Pablo Leal Echenique">
+            <div class="user-avatar">PL</div>
+            <span>Pablo Leal</span>
+            <i data-lucide="chevron-down" style="width:16px;height:16px;"></i>
+        </div>
+    </nav>
+
+    <!-- Dashboard -->
+    <div class="dashboard-grid">
+        <!-- Columna Izquierda: Calendario -->
+        <div class="glass-card" id="calendarCard">
+            <div class="cal-header">
+                <div class="cal-month-year">
+                    <button class="cal-nav-btn" id="prevMonth" title="Mes anterior"><i data-lucide="chevron-left" style="width:20px;height:20px;"></i></button>
+                    <span id="monthYearDisplay">Mayo 2026</span>
+                    <button class="cal-nav-btn" id="nextMonth" title="Mes siguiente"><i data-lucide="chevron-right" style="width:20px;height:20px;"></i></button>
+                </div>
+                <div class="cal-legend">
+                    <span><span class="legend-dot reported"></span> Reportada en calendario</span>
+                    <span><span class="legend-dot unreported"></span> No reportada</span>
+                </div>
+            </div>
+            <!-- Días de la semana -->
+            <div class="cal-grid" id="dayNames"></div>
+            <!-- Grid de días -->
+            <div class="cal-grid" id="calendarDays"></div>
+        </div>
+
+        <!-- Columna Derecha: Panel de detalle -->
+        <div class="detail-panel" id="detailPanel">
+            <div class="glass-card animate-in" id="detailCard">
+                <div class="detail-header">
+                    <span class="detail-date" id="detailDate">Selecciona un día</span>
+                    <span id="detailBadge"></span>
+                </div>
+                <div id="detailContent">
+                    <div class="empty-state">
+                        <i data-lucide="calendar-search" style="width:48px;height:48px;color:var(--text-muted);"></i>
+                        <p style="margin-top:0.5rem;">Haz clic en un día resaltado para ver sus entregas</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Datos simulados
+        const activitiesData = {
+            // Mayo 2026 (fechas simuladas)
+            '2026-05-14': [
+                { course: 'DESARROLLO FRONTEND-2622', title: 'Entrega Proyecto HTML/CSS', time: '23:59', reported: true, type: 'Tarea' },
+                { course: 'SISTEMAS Y MODELOS-1780', title: 'Diagrama de Casos de Uso', time: '18:00', reported: false, type: 'Taller' }
+            ],
+            '2026-05-18': [
+                { course: 'SABER PRO INGLÉS', title: 'Mock Test Reading', time: '23:55', reported: true, type: 'Cuestionario' }
+            ],
+            '2026-05-20': [
+                { course: 'DESARROLLO FRONTEND-2622', title: 'Avance Proyecto Final', time: '23:59', reported: false, type: 'Avance' },
+                { course: 'Taller Saber-Pro Comunicativas', title: 'Ensayo Argumentativo', time: '23:59', reported: true, type: 'Ensayo' }
+            ],
+            '2026-05-25': [
+                { course: 'SISTEMAS Y MODELOS-1780', title: 'Sustentación Parcial', time: '14:00', reported: true, type: 'Exposición' }
+            ],
+            '2026-05-28': [
+                { course: 'SABER PRO INGLÉS', title: 'Listening Comprehension', time: '23:55', reported: false, type: 'Cuestionario' },
+                { course: 'Taller Saber-Pro Comunicativas', title: 'Comprensión Lectora', time: '23:59', reported: false, type: 'Taller' }
+            ]
+        };
+
+        let currentMonth = 4; // Mayo (0-index: 0=Enero, 4=Mayo)
+        let currentYear = 2026;
+        let selectedDate = null;
+
+        const monthNames = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+        const dayNamesShort = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+
+        function getActivityKey(year, month, day) {
+            return `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+        }
+
+        function getActivities(dateStr) {
+            return activitiesData[dateStr] || [];
+        }
+
+        function renderCalendar() {
+            const monthYearEl = document.getElementById('monthYearDisplay');
+            monthYearEl.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+
+            // Render day names
+            const dayNamesEl = document.getElementById('dayNames');
+            dayNamesEl.innerHTML = dayNamesShort.map(d => `<div class="cal-day-name">${d}</div>`).join('');
+
+            // Calcular días del mes
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            const today = new Date();
+            const todayStr = getActivityKey(today.getFullYear(), today.getMonth(), today.getDate());
+
+            const calendarDaysEl = document.getElementById('calendarDays');
+            let html = '';
+
+            // Días vacíos antes del primer día
+            for (let i = 0; i < firstDay; i++) {
+                html += '<div class="cal-day empty"></div>';
+            }
+
+            // Días del mes
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = getActivityKey(currentYear, currentMonth, day);
+                const activities = getActivities(dateStr);
+                const hasReported = activities.some(a => a.reported);
+                const hasUnreported = activities.some(a => !a.reported);
+                const isToday = dateStr === todayStr;
+                const isSelected = dateStr === selectedDate;
+
+                let classes = 'cal-day';
+                if (isToday) classes += ' today';
+                if (isSelected) classes += ' selected';
+
+                html += `<div class="${classes}" data-date="${dateStr}" onclick="selectDay('${dateStr}', this)">
+                    <span class="day-number">${day}</span>`;
+
+                if (hasReported || hasUnreported) {
+                    html += '<div class="indicators">';
+                    if (hasReported) html += '<span class="indicator-dot red"></span>';
+                    if (hasUnreported) html += '<span class="indicator-dot orange"></span>';
+                    html += '</div>';
+                }
+
+                html += '</div>';
+            }
+
+            calendarDaysEl.innerHTML = html;
+            lucide.createIcons();
+        }
+
+        function selectDay(dateStr, element) {
+            // Remover selección previa
+            document.querySelectorAll('.cal-day.selected').forEach(el => el.classList.remove('selected'));
+            // Agregar selección
+            if (element) element.classList.add('selected');
+            selectedDate = dateStr;
+
+            // Actualizar panel de detalle
+            updateDetailPanel(dateStr);
+        }
+
+        function updateDetailPanel(dateStr) {
+            const [year, month, day] = dateStr.split('-');
+            const dateObj = new Date(parseInt(year), parseInt(month)-1, parseInt(day));
+            const formattedDate = dateObj.toLocaleDateString('es-CO', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+            document.getElementById('detailDate').textContent = formattedDate;
+            const activities = getActivities(dateStr);
+            const badgeEl = document.getElementById('detailBadge');
+            const contentEl = document.getElementById('detailContent');
+
+            if (activities.length === 0) {
+                badgeEl.innerHTML = '';
+                contentEl.innerHTML = `
+                    <div class="empty-state">
+                        <i data-lucide="check-circle" style="width:48px;height:48px;color:var(--success);"></i>
+                        <p style="margin-top:0.5rem;">Sin entregas para este día</p>
+                    </div>`;
+            } else {
+                const reportedCount = activities.filter(a => a.reported).length;
+                const unreportedCount = activities.filter(a => !a.reported).length;
+
+                let badgeHtml = '';
+                if (unreportedCount > 0) badgeHtml += `<span class="detail-badge badge-warning">${unreportedCount} sin reportar</span> `;
+                if (reportedCount > 0) badgeHtml += `<span class="detail-badge badge-danger">${reportedCount} reportada(s)</span>`;
+                badgeEl.innerHTML = badgeHtml;
+
+                contentEl.innerHTML = activities.map((act, idx) => `
+                    <div class="activity-card ${act.reported ? 'reported' : 'unreported'} animate-in" style="animation-delay:${idx * 0.08}s">
+                        <div class="activity-course">${act.course}</div>
+                        <div class="activity-title">${act.title}</div>
+                        <div class="activity-meta">
+                            <i data-lucide="clock" style="width:14px;height:14px;"></i>
+                            <span>${act.time} · ${act.type}</span>
+                        </div>
+                        <div class="activity-actions">
+                            <button class="btn btn-primary" onclick="alert('Abriendo entrega: ${act.title}\nCurso: ${act.course}\nEsta acción abriría la actividad en SAVIO.')">
+                                <i data-lucide="external-link" style="width:14px;height:14px;"></i> Ver entrega
+                            </button>
+                            ${act.reported ? 
+                                `<button class="btn btn-outline" onclick="alert('Esta actividad YA está reportada en el calendario de SAVIO.\nSe abriría el evento del calendario.')">
+                                    <i data-lucide="calendar-check" style="width:14px;height:14px;"></i> Ver en calendario
+                                </button>` :
+                                `<button class="btn btn-outline" style="border-color:var(--warning);color:var(--warning);" onclick="alert('Esta actividad NO está en el calendario de SAVIO.\n¿Deseas reportarla?\n(Simulación: Se abriría el formulario para añadir al calendario)')">
+                                    <i data-lucide="alert-triangle" style="width:14px;height:14px;"></i> Reportar al calendario
+                                </button>`
+                            }
+                        </div>
+                    </div>
+                `).join('');
+            }
+            lucide.createIcons();
+        }
+
+        // Navegación de meses
+        document.getElementById('prevMonth').addEventListener('click', () => {
+            currentMonth--;
+            if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+            selectedDate = null;
+            renderCalendar();
+            document.getElementById('detailContent').innerHTML = `<div class="empty-state"><i data-lucide="calendar-search" style="width:48px;height:48px;color:var(--text-muted);"></i><p style="margin-top:0.5rem;">Haz clic en un día resaltado para ver sus entregas</p></div>`;
+            document.getElementById('detailDate').textContent = 'Selecciona un día';
+            document.getElementById('detailBadge').innerHTML = '';
+            lucide.createIcons();
+        });
+
+        document.getElementById('nextMonth').addEventListener('click', () => {
+            currentMonth++;
+            if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+            selectedDate = null;
+            renderCalendar();
+            document.getElementById('detailContent').innerHTML = `<div class="empty-state"><i data-lucide="calendar-search" style="width:48px;height:48px;color:var(--text-muted);"></i><p style="margin-top:0.5rem;">Haz clic en un día resaltado para ver sus entregas</p></div>`;
+            document.getElementById('detailDate').textContent = 'Selecciona un día';
+            document.getElementById('detailBadge').innerHTML = '';
+            lucide.createIcons();
+        });
+
+        // Inicializar
+        renderCalendar();
+    </script>
+</body>
+</html>
