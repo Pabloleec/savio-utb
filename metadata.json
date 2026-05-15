@@ -1,0 +1,6 @@
+{
+  "name": "SAVIO UTB",
+  "description": "Una plataforma universitaria moderna para la gestión de cursos, notificaciones y calendario académico.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
